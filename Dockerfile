@@ -37,11 +37,8 @@ RUN if [ -z "$COVERALLS_TOKEN" ] ; then \
     echo "coverall not enabled" ; \
     else goveralls -coverprofile=.cover/cover.out -service=travis-ci -repotoken $COVERALLS_TOKEN || echo "coverall failed!"; fi
 
-# if DRONE presented use DRONE_* git env to make version
 RUN \
-    if [ -z "$DRONE" ] ; then \
-    echo "runs outside of drone" && version="local"; \
-    else version=${DRONE_TAG}${DRONE_BRANCH}${DRONE_PULL_REQUEST}-${DRONE_COMMIT:0:7}-$(date +%Y%m%d-%H:%M:%S); fi && \
+    version=$(git rev-parse --abbrev-ref HEAD)-$(git describe --abbrev=7 --always --tags)-$(date +%Y%m%d-%H:%M:%S) && \
     echo "version=$version" && \
     go build -o rlb -ldflags "-X main.revision=${version} -s -w" ./app
 
