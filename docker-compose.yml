@@ -1,0 +1,21 @@
+rlb:
+    image: umputun/rlb:latest
+    log_driver: "json-file"
+    log_opt:
+        max-size: "10m"
+        max-file: "5"
+    hostname: rlb
+    restart: always
+    container_name: rlb
+
+    ports:
+        - 7070:7070
+
+    volumes:
+        - ./rlb-sample.yml:/srv/rlb.yml
+
+    environment:
+        - CONF=/srv/rlb.yml
+        - TIMEOUT=10
+        - REFRESH=60
+        - DEBUG=true
