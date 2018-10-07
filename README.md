@@ -59,3 +59,7 @@ Application Options:
   -r, --refresh= refresh interval (secs) (default: 30) [$REFRESH]
   -t, --timeout= HEAD/GET timeout (secs) (default: 5) [$TIMEOUT]
 ```
+
+## Status
+
+RLB in production for several years to serve downloads from [radio-t](https:/radio-t.com)
