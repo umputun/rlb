@@ -52,7 +52,7 @@ func (s *RLBServer) Run() {
 	router.Use(middleware.Throttle(1000), middleware.Timeout(60*time.Second))
 	router.Use(rest.AppInfo("RLB", "Umputun", s.version), rest.Ping)
 	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)))
-	l := logger.New(logger.Flags(logger.All))
+	l := logger.New(logger.Flags(logger.All), logger.Prefix("[INFO]"))
 	router.Use(l.Handler)
 
 	// legacy routes
