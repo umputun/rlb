@@ -93,4 +93,4 @@ Application Options:
 
 ## Status
 
-RLB in production for several years to serve downloads from [radio-t](https:/radio-t.com)
+RLB in production for several years to serve downloads from [radio-t](https://radio-t.com)
