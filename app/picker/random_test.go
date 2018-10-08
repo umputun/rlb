@@ -44,9 +44,9 @@ func TestRandom_Pick(t *testing.T) {
 	defer ts2.Close()
 
 	nmap := map[string][]config.Node{
-		"test": []config.Node{
-			config.Node{Server: ts1.URL, Method: "GET", Ping: "/test/good_get1", Weight: 1},
-			config.Node{Server: ts2.URL, Method: "GET", Ping: "/test/good_get1", Weight: 1},
+		"test": {
+			{Server: ts1.URL, Method: "GET", Ping: "/test/good_get1", Weight: 1},
+			{Server: ts2.URL, Method: "GET", Ping: "/test/good_get1", Weight: 1},
 		},
 	}
 	rw := NewRandomWeighted(config.NodesMap(nmap), time.Second, time.Millisecond*100)

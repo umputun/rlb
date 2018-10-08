@@ -66,7 +66,7 @@ func (w *RandomWeighted) Nodes() map[string][]Node {
 func (w *RandomWeighted) updateAlive() {
 	log.Printf("[DEBUG] alive updater started. refresh=%v, socket timeout=%v", w.refresh, w.timeout)
 
-	//update alive status for svc, tests all nodes in parallel
+	// update alive status for svc, tests all nodes in parallel
 	update := func(svc string) int {
 		respCh := make(chan Node, len(w.nodes[svc]))
 		updNodes := make([]Node, 0, len(w.nodes[svc]))
