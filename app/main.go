@@ -14,11 +14,11 @@ import (
 )
 
 var opts struct {
-	Conf     string `short:"c" long:"conf" env:"CONF" default:"rlb.yml" description:"configuration file"`
-	Refresh  int    `short:"r" long:"refresh" env:"REFRESH" default:"30" description:"refresh interval (secs)"`
-	TimeOut  int    `short:"t" long:"timeout" env:"TIMEOUT" default:"5" description:"HEAD/GET timeouts (secs)"`
-	StatsURL string `short:"s" long:"stats" env:"STATS" default:"" description:"stats url"`
-	Dbg      bool   `long:"dbg" env:"DEBUG" description:"debug mode"`
+	Conf     string        `short:"c" long:"conf" env:"CONF" default:"rlb.yml" description:"configuration file"`
+	Refresh  time.Duration `short:"r" long:"refresh" env:"REFRESH" default:"30" description:"refresh interval"`
+	TimeOut  time.Duration `short:"t" long:"timeout" env:"TIMEOUT" default:"5" description:"HEAD/GET timeouts"`
+	StatsURL string        `short:"s" long:"stats" env:"STATS" default:"" description:"stats url"`
+	Dbg      bool          `long:"dbg" env:"DEBUG" description:"debug mode"`
 }
 
 var revision = "unknown"
@@ -40,12 +40,7 @@ func main() {
 		log.Printf("[WARN] failed to close %s, %s", opts.Conf, err.Error())
 	}
 
-	pck := picker.NewRandomWeighted(
-		conf.Get(),
-		time.Second*time.Duration(opts.Refresh),
-		time.Second*time.Duration(opts.TimeOut),
-	)
-
+	pck := picker.NewRandomWeighted(conf.Get(), opts.Refresh, opts.TimeOut)
 	server.NewRLBServer(pck, conf.NoNode.Message, opts.StatsURL, revision).Run()
 }
 

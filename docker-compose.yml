@@ -16,6 +16,6 @@ rlb:
 
     environment:
         - CONF=/srv/rlb.yml
-        - TIMEOUT=10
-        - REFRESH=60
+        - TIMEOUT=10s
+        - REFRESH=60s
         - DEBUG=true
