@@ -22,7 +22,7 @@ type RandomWeighted struct {
 }
 
 // NewRandomWeighted makes new picker. Activate alive update thread
-func NewRandomWeighted(nodes map[string][]config.Node, refresh, timeout time.Duration) *RandomWeighted {
+func NewRandomWeighted(nodes config.NodesMap, refresh, timeout time.Duration) *RandomWeighted {
 	res := RandomWeighted{nodes: nodesFromConf(nodes), refresh: refresh, timeout: timeout}
 	go res.updateAlive()
 	log.Printf("[DEBUG] nodes %+v", nodes)

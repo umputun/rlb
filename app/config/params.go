@@ -9,9 +9,12 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// NodesMap wraps map with svc name as a key and all svc nodes as value
+type NodesMap map[string][]Node
+
 // ConfFile map by svc for node:conf
 type ConfFile struct {
-	Services map[string][]Node `yaml:"services"`
+	Services NodesMap `yaml:"services"`
 	NoNode   struct {
 		Message string `yaml:"message"`
 	} `yaml:"no_node"`
@@ -39,7 +42,7 @@ func NewConf(reader io.Reader) *ConfFile {
 }
 
 // Get map svc:[nodes] and set default method to HEAD (if not defined)
-func (c ConfFile) Get() map[string][]Node {
+func (c ConfFile) Get() NodesMap {
 	res := make(map[string][]Node)
 	for service, nodeConf := range c.Services {
 		res[service] = []Node{}

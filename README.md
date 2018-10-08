@@ -5,7 +5,7 @@ Servers picked up randomly, unhealthy boxes excluded dynamically.
 
 ## API
 
-* GET|HEAD `/api/v1/jump/<service>?url=/blah/blah2.mp3`
+* GET|HEAD `/api/v1/jump/<service>?url=/blah/blah2.mp3` – returns 302 redirect to destination server
 
 ## Config file format
 ```

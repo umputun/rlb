@@ -24,7 +24,7 @@ type Node struct {
 }
 
 // nodesFromConf makes picker Node from config
-func nodesFromConf(nodes map[string][]config.Node) (result map[string][]Node) {
+func nodesFromConf(nodes config.NodesMap) (result map[string][]Node) {
 	result = map[string][]Node{}
 	for k, v := range nodes {
 		result[k] = []Node{}
@@ -48,7 +48,7 @@ func checkURL(URL string, method string, timeout time.Duration) error {
 	case "GET":
 		resp, err = client.Get(URL)
 	default:
-		return errors.Wrapf(err, "refused to hit %s, unknown method %s", URL, method)
+		return errors.Errorf("refused to hit %s, unknown method %s", URL, method)
 	}
 
 	if err != nil {

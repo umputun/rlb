@@ -38,7 +38,7 @@ func NewRLBServer(picker picker.Interface, emsg, statsURL, version string) *RLBS
 		version:  version,
 	}
 	for k, v := range picker.Nodes() {
-		log.Printf("[INFO] servcie=%s, nodes=%v", k, v)
+		log.Printf("[INFO] service=%s, nodes=%v", k, v)
 	}
 	return &res
 }
