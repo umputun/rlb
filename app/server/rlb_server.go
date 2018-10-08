@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -27,15 +28,17 @@ type RLBServer struct {
 	statsURL string
 	errMsg   string
 	version  string
+	port     int
 }
 
 // NewRLBServer makes a new rlb server for map of services
-func NewRLBServer(picker picker.Interface, emsg, statsURL, version string) *RLBServer {
+func NewRLBServer(picker picker.Interface, emsg, statsURL string, port int, version string) *RLBServer {
 	res := RLBServer{
 		picker:   picker,
 		errMsg:   emsg,
 		statsURL: statsURL,
 		version:  version,
+		port:     port,
 	}
 	for k, v := range picker.Nodes() {
 		log.Printf("[INFO] service=%s, nodes=%v", k, v)
@@ -45,7 +48,7 @@ func NewRLBServer(picker picker.Interface, emsg, statsURL, version string) *RLBS
 
 // Run activates alive updater and web server
 func (s *RLBServer) Run() {
-	log.Printf("[INFO] activate web server")
+	log.Printf("[INFO] activate web server on port %d", s.port)
 	router := chi.NewRouter()
 
 	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer)
@@ -64,7 +67,7 @@ func (s *RLBServer) Run() {
 		r.Head("/{svc}", s.DoJump)
 	})
 
-	log.Fatal(http.ListenAndServe(":7070", router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.port), router))
 }
 
 // DoJump - jump to alive server for svc, url = Query("url")
