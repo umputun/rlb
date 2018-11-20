@@ -2,12 +2,14 @@ package server
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/didip/tollbooth"
@@ -29,6 +31,18 @@ type RLBServer struct {
 	errMsg   string
 	version  string
 	port     int
+
+	httpServer *http.Server
+	lock       sync.Mutex
+}
+
+// LogRecord for stats
+type LogRecord struct {
+	ID       string    `json:"id,omitempty"`
+	FromIP   string    `json:"from_ip"`
+	TS       time.Time `json:"ts,omitempty"`
+	Fname    string    `json:"fname"`
+	DestHost string    `json:"dest"`
 }
 
 // NewRLBServer makes a new rlb server for map of services
@@ -49,6 +63,38 @@ func NewRLBServer(picker picker.Interface, emsg, statsURL string, port int, vers
 // Run activates alive updater and web server
 func (s *RLBServer) Run() {
 	log.Printf("[INFO] activate web server on port %d", s.port)
+	router := s.routes()
+
+	s.lock.Lock()
+	s.httpServer = &http.Server{
+		Addr:              fmt.Sprintf(":%d", s.port),
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      5 * time.Second,
+		IdleTimeout:       30 * time.Second,
+	}
+	s.lock.Unlock()
+
+	err := s.httpServer.ListenAndServe()
+	log.Printf("[WARN] http server terminated, %s", err)
+}
+
+// Shutdown rlb http server
+func (s *RLBServer) Shutdown() {
+	log.Print("[WARN] shutdown rest server")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	s.lock.Lock()
+	if s.httpServer != nil {
+		if err := s.httpServer.Shutdown(ctx); err != nil {
+			log.Printf("[DEBUG] http shutdown error, %s", err)
+		}
+		log.Print("[DEBUG] shutdown http server completed")
+	}
+	s.lock.Unlock()
+}
+
+func (s *RLBServer) routes() chi.Router {
 	router := chi.NewRouter()
 
 	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer)
@@ -66,8 +112,7 @@ func (s *RLBServer) Run() {
 		r.Get("/{svc}", s.DoJump)
 		r.Head("/{svc}", s.DoJump)
 	})
-
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.port), router))
+	return router
 }
 
 // DoJump - jump to alive server for svc, url = Query("url")
@@ -95,15 +140,6 @@ func (s *RLBServer) DoJump(w http.ResponseWriter, r *http.Request) {
 func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) error {
 	if s.statsURL == "" {
 		return nil
-	}
-
-	// LogRecord for stats
-	type LogRecord struct {
-		ID       string    `json:"id,omitempty"`
-		FromIP   string    `json:"from_ip"`
-		TS       time.Time `json:"ts,omitempty"`
-		Fname    string    `json:"fname"`
-		DestHost string    `json:"dest"`
 	}
 
 	lrec := LogRecord{
