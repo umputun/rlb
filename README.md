@@ -24,7 +24,7 @@ service1:
     n1: # node id
         server: http://n1.radio-t.com     # base url 
         ping: /rtfiles/rt_podcast480.mp3  # ping url to check node's health
-        method: HEAD                      # ping method, uses HEAD if notthing defined
+        method: HEAD                      # ping method, uses HEAD if notching defined
         weight: 1                         # relative weight of the node [1..n]   
 
     n2:
