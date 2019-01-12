@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 
-	"gopkg.in/yaml.v2"
+	log "github.com/go-pkgz/lgr"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // NodesMap wraps map with svc name as a key and all svc nodes as value

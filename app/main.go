@@ -1,12 +1,11 @@
 package main
 
 import (
-	"log"
 	"os"
 	"time"
 
-	"github.com/hashicorp/logutils"
-	"github.com/jessevdk/go-flags"
+	log "github.com/go-pkgz/lgr"
+	flags "github.com/jessevdk/go-flags"
 
 	"github.com/umputun/rlb/app/config"
 	"github.com/umputun/rlb/app/picker"
@@ -34,8 +33,9 @@ func main() {
 
 	confReader, err := os.Open(opts.Conf)
 	if err != nil {
-		log.Fatalf("failed to open %s, %v", opts.Conf, err)
+		log.Fatalf("[PANIC] failed to open %s, %v", opts.Conf, err)
 	}
+
 	conf := config.NewConf(confReader)
 	if err := confReader.Close(); err != nil {
 		log.Printf("[WARN] failed to close %s, %s", opts.Conf, err.Error())
@@ -46,17 +46,9 @@ func main() {
 }
 
 func setupLog(dbg bool) {
-	filter := &logutils.LevelFilter{
-		Levels:   []logutils.LogLevel{"DEBUG", "INFO", "WARN", "ERROR"},
-		MinLevel: logutils.LogLevel("INFO"),
-		Writer:   os.Stdout,
-	}
-
-	log.SetFlags(log.Ldate | log.Ltime)
-
 	if dbg {
-		log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
-		filter.MinLevel = logutils.LogLevel("DEBUG")
+		log.Setup(log.Debug, log.CallerFile, log.Msec, log.LevelBraces)
+		return
 	}
-	log.SetOutput(filter)
+	log.Setup(log.Msec, log.LevelBraces)
 }

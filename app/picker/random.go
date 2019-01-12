@@ -2,11 +2,11 @@ package picker
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"sync"
 	"time"
 
+	log "github.com/go-pkgz/lgr"
 	"github.com/pkg/errors"
 
 	"github.com/umputun/rlb/app/config"

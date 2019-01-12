@@ -1,10 +1,10 @@
 package picker
 
 import (
-	"log"
 	"net/http"
 	"time"
 
+	log "github.com/go-pkgz/lgr"
 	"github.com/pkg/errors"
 
 	"github.com/umputun/rlb/app/config"
