@@ -97,12 +97,11 @@ func (s *RLBServer) Shutdown() {
 func (s *RLBServer) routes() chi.Router {
 	router := chi.NewRouter()
 
-	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer)
+	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()))
 	router.Use(middleware.Throttle(1000), middleware.Timeout(60*time.Second))
 	router.Use(rest.AppInfo("RLB", "Umputun", s.version), rest.Ping)
 	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)))
-	l := logger.New(logger.Flags(logger.All), logger.Prefix("[INFO]"))
-	router.Use(l.Handler)
+	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[INFO]")).Handler)
 
 	// legacy routes
 	router.Get("/{svc}", s.DoJump)
