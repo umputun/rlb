@@ -3,7 +3,7 @@ module github.com/umputun/rlb
 require (
 	github.com/didip/tollbooth v4.0.0+incompatible
 	github.com/didip/tollbooth_chi v0.0.0-20170928041846-6ab5f3083f3d
-	github.com/go-chi/chi v4.0.0+incompatible
+	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/go-chi/render v1.0.1
 	github.com/go-pkgz/lgr v0.2.1
 	github.com/go-pkgz/rest v1.1.6
