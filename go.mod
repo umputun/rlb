@@ -6,7 +6,7 @@ require (
 	github.com/go-chi/chi v4.0.0+incompatible
 	github.com/go-chi/render v1.0.1
 	github.com/go-pkgz/lgr v0.2.1
-	github.com/go-pkgz/rest v1.1.6
+	github.com/go-pkgz/rest v1.4.1
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
