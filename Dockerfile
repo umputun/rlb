@@ -43,14 +43,11 @@ RUN \
     go build -o rlb -ldflags "-X main.revision=${version} -s -w" ./app
 
 
-FROM umputun/baseimage:app-latest
+FROM umputun/baseimage:app
 
 COPY --from=build /go/src/github.com/umputun/rlb/rlb /srv/rlb
-RUN chown -R app:app /srv
-RUN chmod +x /srv/rlb
 
 EXPOSE 7070
 WORKDIR /srv
 
 CMD ["/srv/rlb"]
-ENTRYPOINT ["/init.sh"]
