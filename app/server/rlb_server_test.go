@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -40,11 +41,15 @@ func TestSubmitStats(t *testing.T) {
 	statsSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "/stat", r.URL.Path)
 		lrec := LogRecord{}
-		err := json.NewDecoder(r.Body).Decode(&lrec)
+		body, err := ioutil.ReadAll(r.Body)
+		require.NoError(t, err)
+		err = json.Unmarshal(body, &lrec)
 		require.NoError(t, err)
 		assert.Equal(t, "127.0.0.1", lrec.FromIP)
 		assert.Equal(t, "srv1.com", lrec.DestHost)
-		assert.Equal(t, "svc1/file123.mp3", lrec.Fname)
+		assert.Equal(t, "file123.mp3", lrec.Fname)
+		assert.Equal(t, "svc1", lrec.Service)
+		t.Logf("%v %s", lrec, string(body))
 	}))
 	defer statsSrv.Close()
 
