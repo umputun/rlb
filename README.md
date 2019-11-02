@@ -1,4 +1,4 @@
-# RLB - Redirecting Load Balancer [![Build Status](https://travis-ci.org/umputun/rlb.svg?branch=master)](https://travis-ci.org/umputun/rlb) [![Coverage Status](https://coveralls.io/repos/github/umputun/rlb/badge.svg)](https://coveralls.io/github/umputun/rlb) [![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/umputun/rlb/)
+# RLB - Redirecting Load Balancer [![Build Status](https://github.com/umputun/rlb/workflows/build/badge.svg)](https://github.com/umputun/rlb/actions) [![Coverage Status](https://coveralls.io/repos/github/umputun/rlb/badge.svg)](https://coveralls.io/github/umputun/rlb) [![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/umputun/rlb/)
 
 This service redirects incoming `GET` and `HEAD` requests to the upstream servers. 
 Servers picked up randomly, unhealthy boxes excluded dynamically.
