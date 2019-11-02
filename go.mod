@@ -7,8 +7,10 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/go-pkgz/lgr v0.6.2
 	github.com/go-pkgz/rest v1.4.1
+	github.com/google/uuid v1.1.1 // indirect
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/lithammer/shortuuid v3.0.0+incompatible
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.3.0

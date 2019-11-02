@@ -19,6 +19,7 @@ import (
 	log "github.com/go-pkgz/lgr"
 	"github.com/go-pkgz/rest"
 	"github.com/go-pkgz/rest/logger"
+	"github.com/lithammer/shortuuid"
 	"github.com/pkg/errors"
 
 	"github.com/umputun/rlb/app/picker"
@@ -143,7 +144,7 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 	}
 
 	lrec := LogRecord{
-		ID:       "",
+		ID:       shortuuid.New(),
 		FromIP:   strings.Split(r.RemoteAddr, ":")[0],
 		TS:       time.Now(),
 		Fname:    strings.Split(strings.TrimLeft(url, "/"), "/")[1],

@@ -17,8 +17,12 @@ github.com/go-pkgz/lgr
 # github.com/go-pkgz/rest v1.4.1
 github.com/go-pkgz/rest
 github.com/go-pkgz/rest/logger
+# github.com/google/uuid v1.1.1
+github.com/google/uuid
 # github.com/jessevdk/go-flags v1.4.0
 github.com/jessevdk/go-flags
+# github.com/lithammer/shortuuid v3.0.0+incompatible
+github.com/lithammer/shortuuid
 # github.com/patrickmn/go-cache v2.1.0+incompatible
 github.com/patrickmn/go-cache
 # github.com/pkg/errors v0.8.1
