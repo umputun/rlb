@@ -1,8 +1,10 @@
 # RLB - Redirecting Load Balancer 
 [![Build Status](https://github.com/umputun/rlb/workflows/build/badge.svg)](https://github.com/umputun/rlb/actions) [![Coverage Status](https://coveralls.io/repos/github/umputun/rlb/badge.svg)](https://coveralls.io/github/umputun/rlb) [![Go Report Card](https://goreportcard.com/badge/github.com/umputun/rlb)](https://goreportcard.com/report/github.com/umputun/rlb) [![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/umputun/rlb/)
 
-This service redirects incoming `GET` and `HEAD` requests to the upstream servers. 
+This service redirects incoming `GET` and `HEAD` requests (with 302) to the upstream servers. 
 Servers picked up randomly, unhealthy boxes excluded dynamically.
+
+_Note: This is not a replacement for reverse proxy. All it does is HTTP redirect, not real network proxying._
 
 ## Install
 
@@ -66,11 +68,12 @@ RLB does not implement any statistics internally but supports external service f
 
 ```go
 	type LogRecord struct {
-		ID       string    `json:"id,omitempty"`
-		FromIP   string    `json:"from_ip"`
-		TS       time.Time `json:"ts,omitempty"`
-		Fname    string    `json:"fname"`
-		DestHost string    `json:"dest"`
+		ID       string    `json:"id,omitempty"` // uniuque id
+		FromIP   string    `json:"from_ip"`      // source ip
+		TS       time.Time `json:"ts,omitempty"` // timestamp
+		Fname    string    `json:"file_name"`    // requested file name
+		Servcie  string	   `json:"service"`      // requested service
+		DestHost string    `json:"dest"`         // picked destination node
 	}
 ```
 
