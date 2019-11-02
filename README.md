@@ -4,7 +4,7 @@
 This service redirects incoming `GET` and `HEAD` requests (with 302) to the upstream servers. 
 Servers picked up randomly, unhealthy boxes excluded dynamically.
 
-_Note: This is not a replacement for reverse proxy. All it does is HTTP redirect, not real network proxying._
+_Note: This is not a replacement for reverse proxy. All it does is HTTP redirect, not the real network proxying._
 
 ## Install
 
