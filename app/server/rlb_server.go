@@ -45,6 +45,7 @@ type LogRecord struct {
 	FileName string    `json:"file_name"`
 	Service  string    `json:"service"`
 	DestHost string    `json:"dest"`
+	Referer  string    `json:"referer"`
 }
 
 // NewRLBServer makes a new rlb server for map of services
@@ -153,6 +154,7 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 		FileName: strings.Join(fileNameSplit[1:], "/"),
 		Service:  fileNameSplit[0],
 		DestHost: strings.TrimPrefix(strings.TrimPrefix(node.Server, "http://"), "https://"),
+		Referer:  r.Referer(),
 	}
 	client := http.Client{Timeout: time.Millisecond * 100}
 
