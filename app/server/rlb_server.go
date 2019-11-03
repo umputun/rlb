@@ -105,14 +105,16 @@ func (s *RLBServer) routes() chi.Router {
 	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)))
 	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[INFO]")).Handler)
 
-	// legacy routes
-	router.Get("/{svc}", s.DoJump)
-	router.Head("/{svc}", s.DoJump)
-
+	// current routes
 	router.Route("/api/v1/jump", func(r chi.Router) {
 		r.Get("/{svc}", s.DoJump)
 		r.Head("/{svc}", s.DoJump)
 	})
+
+	// legacy routes
+	router.Get("/{svc}", s.DoJump)
+	router.Head("/{svc}", s.DoJump)
+
 	return router
 }
 
@@ -131,7 +133,7 @@ func (s *RLBServer) DoJump(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[DEBUG] redirect to %s%s", node.Server, url)
 	go func() {
 		if err := s.submitStats(r, node, svc+url); err != nil {
-			log.Printf("[WARN] can't submit stats, %s", err)
+			log.Printf("[DEBUG] can't submit stats, %s", err)
 		}
 	}()
 
