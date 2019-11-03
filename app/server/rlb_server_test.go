@@ -47,7 +47,7 @@ func TestSubmitStats(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, "127.0.0.1", lrec.FromIP)
 		assert.Equal(t, "srv1.com", lrec.DestHost)
-		assert.Equal(t, "file123.mp3", lrec.Fname)
+		assert.Equal(t, "file123.mp3", lrec.FileName)
 		assert.Equal(t, "svc1", lrec.Service)
 		t.Logf("%v %s", lrec, string(body))
 	}))

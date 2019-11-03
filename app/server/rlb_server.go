@@ -42,7 +42,7 @@ type LogRecord struct {
 	ID       string    `json:"id,omitempty"`
 	FromIP   string    `json:"from_ip"`
 	TS       time.Time `json:"ts,omitempty"`
-	Fname    string    `json:"file_name"`
+	FileName string    `json:"file_name"`
 	Service  string    `json:"service"`
 	DestHost string    `json:"dest"`
 }
@@ -145,12 +145,13 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 		return nil
 	}
 
+	fileNameSplit := strings.Split(strings.TrimLeft(url, "/"), "/")
 	lrec := LogRecord{
 		ID:       shortuuid.New(),
 		FromIP:   strings.Split(r.RemoteAddr, ":")[0],
 		TS:       time.Now(),
-		Fname:    strings.Split(strings.TrimLeft(url, "/"), "/")[1],
-		Service:  strings.Split(strings.TrimLeft(url, "/"), "/")[0],
+		FileName: strings.Join(fileNameSplit[1:], "/"),
+		Service:  fileNameSplit[0],
 		DestHost: strings.TrimPrefix(strings.TrimPrefix(node.Server, "http://"), "https://"),
 	}
 	client := http.Client{Timeout: time.Millisecond * 100}
