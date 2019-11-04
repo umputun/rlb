@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -63,6 +64,31 @@ func TestSubmitStats(t *testing.T) {
 	assert.Equal(t, "http://srv1.com/file123.mp3", r)
 
 	time.Sleep(100 * time.Millisecond)
+}
+
+func TestRun(t *testing.T) {
+	port := rand.Intn(10000) + 2000
+	srv := NewRLBServer(newMockPicker(), "error msg", "", port, "v1")
+
+	go func() {
+		srv.Run()
+	}()
+
+	ts := httptest.NewServer(srv.routes())
+	defer func() {
+		ts.Close()
+		defer srv.Shutdown()
+	}()
+
+	time.Sleep(100 * time.Millisecond) // allow server to start
+
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/ping", port))
+	require.NoError(t, err)
+	defer resp.Body.Close()
+	data, err := ioutil.ReadAll(resp.Body)
+	require.NoError(t, err)
+	assert.Equal(t, "pong", string(data))
+
 }
 
 type hitReq struct {
