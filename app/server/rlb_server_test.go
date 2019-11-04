@@ -123,11 +123,11 @@ func newMockPicker() *mockPicker {
 	return &mockPicker{
 		ids: map[string]int{},
 		nodes: map[string][]picker.Node{
-			"svc1": []picker.Node{
+			"svc1": {
 				{Node: config.Node{Server: "http://srv1.com"}},
 				{Node: config.Node{Server: "http://srv2.com"}},
 			},
-			"svc2": []picker.Node{
+			"svc2": {
 				{Node: config.Node{Server: "http://srv1.com"}},
 				{Node: config.Node{Server: "http://srv2.com"}},
 				{Node: config.Node{Server: "http://srv3.com"}},

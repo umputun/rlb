@@ -1,59 +1,59 @@
 services:
 
-    test1:
-        - server: http://n1.radio-t.com
-          ping: /rtfiles/rt_podcast480.mp3
-          method: HEAD
-          weight: 1
+  test1:
+    - server: http://n1.radio-t.com
+      ping: /rtfiles/rt_podcast480.mp3
+      method: HEAD
+      weight: 1
 
-        - server: http://n2.radio-t.com
-          ping: /rtfiles/rt_podcast480.mp3
-          method: HEAD
-          weight: 1
+    - server: http://n2.radio-t.com
+      ping: /rtfiles/rt_podcast480.mp3
+      method: HEAD
+      weight: 1
 
-        - server: http://n3.radio-t.com
-          ping: /rtfiles/rt_podcast480.mp3
-          method: HEAD
-          weight: 5
+    - server: http://n3.radio-t.com
+      ping: /rtfiles/rt_podcast480.mp3
+      method: HEAD
+      weight: 5
 
-    test2:
-        - server: http://n5.radio-t.com
-          ping: /online
-          method: GET
-          weight: 1
+  test2:
+    - server: http://n5.radio-t.com
+      ping: /online
+      method: GET
+      weight: 1
 
-        - server: http://n2.radio-t.com
-          ping: /online
-          method: GET
-          weight: 3
+    - server: http://n2.radio-t.com
+      ping: /online
+      method: GET
+      weight: 3
 
 no_node:
 
-    message: >
-        <!doctype html>
-        <head>
-            <meta http-equiv="content-type" content="text/html;charset=utf-8">
-            <title>Не в силах</title>
-            <style>
-              body { text-align: center; padding: 150px; }
-              h1 { font-size: 50px; }
-              body { font: 20px Helvetica, sans-serif; color: #333; }
-              article { display: block; text-align: left; width: 650px; margin: 0 auto; }
-              a { color: #dc8100; text-decoration: none; }
-              a:hover { color: #333; text-decoration: none; }
-            </style>
-        </head>
+  message: >
+    <!doctype html>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8">
+        <title>Не в силах</title>
+        <style>
+          body { text-align: center; padding: 150px; }
+          h1 { font-size: 50px; }
+          body { font: 20px Helvetica, sans-serif; color: #333; }
+          article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+          a { color: #dc8100; text-decoration: none; }
+          a:hover { color: #333; text-decoration: none; }
+        </style>
+    </head>
 
-        <article>
-            <h2>Не в силах дать вам то, что вы хотели</h2>
-            <div>
-                <p>Увы - этого здесь просто нет. Что делать?</p>
-                <ul>
-                  <li>Если вы пытаетесь слушать стрим - <b>проверить время вещания.</b></li>
-                  <li>Проверить, куда вы собирались попасть и <b>починить свой url.</b></li>
-                  <li><b>Написать нам жалобу</b> - email сами-знаете-куда.</li>
-                  <li><b>Пойти на <a href="https://radio-t.com">сайт радио-т</a></b> где все хорошо.</li>
-                </ul>
-                <p>&mdash; авторы</p>
-            </div>
-        </article>
+    <article>
+        <h2>Не в силах дать вам то, что вы хотели</h2>
+        <div>
+            <p>Увы - этого здесь просто нет. Что делать?</p>
+            <ul>
+              <li>Если вы пытаетесь слушать стрим - <b>проверить время вещания.</b></li>
+              <li>Проверить, куда вы собирались попасть и <b>починить свой url.</b></li>
+              <li><b>Написать нам жалобу</b> - email сами-знаете-куда.</li>
+              <li><b>Пойти на <a href="https://radio-t.com">сайт радио-т</a></b> где все хорошо.</li>
+            </ul>
+            <p>&mdash; авторы</p>
+        </div>
+    </article>
