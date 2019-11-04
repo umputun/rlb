@@ -1,3 +1,5 @@
+// Package config handles params from yml config file
+// An example presented in the repo as rlb-sample.yml
 package config
 
 import (

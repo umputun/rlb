@@ -1,3 +1,4 @@
+// Package picker gets list of healthy nodes and pick one of them randomly based on weight
 package picker
 
 import (
@@ -9,12 +10,6 @@ import (
 
 	"github.com/umputun/rlb/app/config"
 )
-
-// Interface defines pick method to return final redirect url from servcie and resource
-type Interface interface {
-	Pick(svc string, resource string) (resURL string, node Node, err error)
-	Nodes() map[string][]Node
-}
 
 // Node has a part from config and alive + changed for status monitoring
 type Node struct {
@@ -36,7 +31,7 @@ func nodesFromConf(nodes config.NodesMap) (result map[string][]Node) {
 }
 
 // checkURL with given method
-func checkURL(URL string, method string, timeout time.Duration) error {
+func checkURL(url, method string, timeout time.Duration) error {
 
 	var resp *http.Response
 	var err error
@@ -44,15 +39,15 @@ func checkURL(URL string, method string, timeout time.Duration) error {
 	client := http.Client{Timeout: timeout}
 	switch method {
 	case "HEAD", "":
-		resp, err = client.Head(URL)
+		resp, err = client.Head(url)
 	case "GET":
-		resp, err = client.Get(URL)
+		resp, err = client.Get(url)
 	default:
-		return errors.Errorf("refused to hit %s, unknown method %s", URL, method)
+		return errors.Errorf("refused to hit %s, unknown method %s", url, method)
 	}
 
 	if err != nil {
-		return errors.Wrapf(err, "failed to hit %s, method %s", URL, method)
+		return errors.Wrapf(err, "failed to hit %s, method %s", url, method)
 	}
 
 	defer func() {
@@ -62,7 +57,7 @@ func checkURL(URL string, method string, timeout time.Duration) error {
 	}()
 
 	if resp.StatusCode >= 400 {
-		return errors.Errorf("bad status code %d for %s", resp.StatusCode, URL)
+		return errors.Errorf("bad status code %d for %s", resp.StatusCode, url)
 	}
 
 	return nil

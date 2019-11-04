@@ -136,7 +136,7 @@ func newMockPicker() *mockPicker {
 	}
 }
 
-func (m *mockPicker) Pick(svc string, resource string) (resURL string, node picker.Node, err error) {
+func (m *mockPicker) Pick(svc, resource string) (resURL string, node picker.Node, err error) {
 	svcNodes, ok := m.nodes[svc]
 	if !ok {
 		return "", node, errors.Errorf("no such service %s", svc)

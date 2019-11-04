@@ -23,6 +23,7 @@ type RandomWeighted struct {
 
 // NewRandomWeighted makes new picker. Activate alive update thread
 func NewRandomWeighted(nodes config.NodesMap, refresh, timeout time.Duration) *RandomWeighted {
+	rand.Seed(int64(time.Now().Nanosecond()))
 	res := RandomWeighted{nodes: nodesFromConf(nodes), refresh: refresh, timeout: timeout}
 	go res.updateAlive()
 	log.Printf("[DEBUG] nodes %+v", nodes)
@@ -30,7 +31,7 @@ func NewRandomWeighted(nodes config.NodesMap, refresh, timeout time.Duration) *R
 }
 
 // Pick random node with weights
-func (w *RandomWeighted) Pick(svc string, resource string) (resURL string, node Node, err error) {
+func (w *RandomWeighted) Pick(svc, resource string) (resURL string, node Node, err error) {
 	log.Printf("[DEBUG] pick %s for %s", svc, resource)
 
 	w.lock.RLock()
@@ -117,8 +118,4 @@ func (w *RandomWeighted) updateAlive() {
 		}
 		time.Sleep(w.refresh)
 	}
-}
-
-func init() {
-	rand.Seed(int64(time.Now().Nanosecond()))
 }

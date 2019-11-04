@@ -1,3 +1,4 @@
+// Package server implements rest server handling  "jump" requests and optionally updating stats service
 package server
 
 import (
@@ -27,14 +28,20 @@ import (
 
 // RLBServer - main rlb server
 type RLBServer struct {
-	picker   picker.Interface
-	statsURL string
-	errMsg   string
-	version  string
-	port     int
+	nodePicker Picker
+	statsURL   string
+	errMsg     string
+	version    string
+	port       int
 
 	httpServer *http.Server
 	lock       sync.Mutex
+}
+
+// Picker defines pick method to return final redirect url from service and resource
+type Picker interface {
+	Pick(svc string, resource string) (resURL string, node picker.Node, err error)
+	Nodes() map[string][]picker.Node
 }
 
 // LogRecord for stats
@@ -49,15 +56,15 @@ type LogRecord struct {
 }
 
 // NewRLBServer makes a new rlb server for map of services
-func NewRLBServer(picker picker.Interface, emsg, statsURL string, port int, version string) *RLBServer {
+func NewRLBServer(nodePicker Picker, emsg, statsURL string, port int, version string) *RLBServer {
 	res := RLBServer{
-		picker:   picker,
-		errMsg:   emsg,
-		statsURL: statsURL,
-		version:  version,
-		port:     port,
+		nodePicker: nodePicker,
+		errMsg:     emsg,
+		statsURL:   statsURL,
+		version:    version,
+		port:       port,
 	}
-	for k, v := range picker.Nodes() {
+	for k, v := range nodePicker.Nodes() {
 		log.Printf("[INFO] service=%s, nodes=%v", k, v)
 	}
 	return &res
@@ -124,7 +131,7 @@ func (s *RLBServer) DoJump(w http.ResponseWriter, r *http.Request) {
 	svc := chi.URLParam(r, "svc")
 	url := r.URL.Query().Get("url")
 	log.Printf("[DEBUG] jump %s %s", svc, url)
-	redirurl, node, err := s.picker.Pick(svc, url)
+	redirurl, node, err := s.nodePicker.Pick(svc, url)
 	if err != nil {
 		render.Status(r, http.StatusNotFound)
 		render.HTML(w, r, s.errMsg)
@@ -138,7 +145,7 @@ func (s *RLBServer) DoJump(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	http.Redirect(w, r, redirurl, 302)
+	http.Redirect(w, r, redirurl, http.StatusFound)
 }
 
 func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) error {
