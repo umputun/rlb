@@ -52,7 +52,7 @@ func (w *RandomWeighted) Pick(svc, resource string) (resURL string, node Node, e
 		return "", Node{}, errors.Errorf("no node for %s", svc)
 	}
 
-	node = alive[rand.Intn(len(alive))]
+	node = alive[rand.Intn(len(alive))] //nolint
 	return node.Server + resource, node, nil
 }
 

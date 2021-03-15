@@ -67,7 +67,7 @@ func TestSubmitStats(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-	port := rand.Intn(10000) + 2000
+	port := rand.Intn(10000) + 2000 //nolint
 	srv := NewRLBServer(newMockPicker(), "error msg", "", port, "v1")
 
 	go func() {
