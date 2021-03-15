@@ -5,7 +5,7 @@ import (
 	"time"
 
 	log "github.com/go-pkgz/lgr"
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 
 	"github.com/umputun/rlb/app/config"
 	"github.com/umputun/rlb/app/picker"
