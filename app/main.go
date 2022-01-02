@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 	"time"
 
 	log "github.com/go-pkgz/lgr"
@@ -41,7 +42,7 @@ func main() {
 		log.Printf("[WARN] failed to close %s, %s", opts.Conf, err.Error())
 	}
 
-	pck := picker.NewRandomWeighted(conf.Get(), opts.Refresh, opts.TimeOut, conf.FailBackURL)
+	pck := picker.NewRandomWeighted(conf.Get(), opts.Refresh, opts.TimeOut, strings.TrimSuffix(conf.FailBackURL, "/"))
 	server.NewRLBServer(pck, conf.NoNode.Message, opts.StatsURL, opts.Port, revision).Run()
 }
 
