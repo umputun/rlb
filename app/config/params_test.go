@@ -17,6 +17,7 @@ func TestGet(t *testing.T) {
 	assert.Equal(t, "HEAD", r["test1"][1].Method, "HEAD as explicit method")
 	assert.Equal(t, "GET", r["test1"][2].Method, "GET as explicit method")
 	assert.Equal(t, "blah", conf.NoNode.Message)
+	assert.Equal(t, "http://archive.radio-t.com/media", conf.FailBackURL)
 }
 
 const rlbYaml = `
@@ -49,4 +50,6 @@ services:
 
 no_node:
  message: blah
+
+failback: http://archive.radio-t.com/media
 `

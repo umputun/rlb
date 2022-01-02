@@ -19,6 +19,7 @@ type ConfFile struct {
 	NoNode   struct {
 		Message string `yaml:"message"`
 	} `yaml:"no_node"`
+	FailBackURL string `yaml:"failback"`
 }
 
 // Node has a part from config and alive + changed for status monitoring
