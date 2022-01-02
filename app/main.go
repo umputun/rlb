@@ -41,7 +41,7 @@ func main() {
 		log.Printf("[WARN] failed to close %s, %s", opts.Conf, err.Error())
 	}
 
-	pck := picker.NewRandomWeighted(conf.Get(), opts.Refresh, opts.TimeOut)
+	pck := picker.NewRandomWeighted(conf.Get(), opts.Refresh, opts.TimeOut, conf.FailBackURL)
 	server.NewRLBServer(pck, conf.NoNode.Message, opts.StatsURL, opts.Port, revision).Run()
 }
 

@@ -14,17 +14,17 @@ import (
 
 // RandomWeighted implements picker with the random, weighted selection
 type RandomWeighted struct {
-	refresh time.Duration
-	timeout time.Duration
-
-	nodes map[string][]Node
-	lock  sync.RWMutex
+	refresh     time.Duration
+	timeout     time.Duration
+	failBackURL string
+	nodes       map[string][]Node
+	lock        sync.RWMutex
 }
 
 // NewRandomWeighted makes new picker. Activate alive update thread
-func NewRandomWeighted(nodes config.NodesMap, refresh, timeout time.Duration) *RandomWeighted {
+func NewRandomWeighted(nodes config.NodesMap, refresh, timeout time.Duration, failBackURL string) *RandomWeighted {
 	rand.Seed(int64(time.Now().Nanosecond()))
-	res := RandomWeighted{nodes: nodesFromConf(nodes), refresh: refresh, timeout: timeout}
+	res := RandomWeighted{nodes: nodesFromConf(nodes), refresh: refresh, timeout: timeout, failBackURL: failBackURL}
 	go res.updateAlive()
 	log.Printf("[DEBUG] nodes %+v", nodes)
 	return &res
@@ -53,7 +53,15 @@ func (w *RandomWeighted) Pick(svc, resource string) (resURL string, node Node, e
 	}
 
 	node = alive[rand.Intn(len(alive))] // nolint
-	return node.Server + resource, node, nil
+
+	resURL = node.Server + resource
+	if w.failBackURL != "" {
+		if err = checkURL(resURL, "HEAD", w.timeout); err != nil {
+			resURL = w.failBackURL + resource
+		}
+	}
+
+	return resURL, node, nil
 }
 
 // Nodes return list of all current nodes
