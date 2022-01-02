@@ -62,7 +62,7 @@ func TestRandom_PickNoFailBack(t *testing.T) {
 func TestRandom_PickWithFailBack(t *testing.T) {
 
 	calls := 0
-	ts1 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := func(w http.ResponseWriter, r *http.Request) {
 		t.Logf("request %+v", r)
 		if r.Method == "HEAD" {
 			calls++
@@ -82,33 +82,12 @@ func TestRandom_PickWithFailBack(t *testing.T) {
 			return
 		}
 		w.WriteHeader(http.StatusBadRequest)
-	}))
+	}
 
+	ts1 := httptest.NewServer(http.HandlerFunc(handler))
 	defer ts1.Close()
 
-	ts2 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		t.Logf("request %+v", r)
-
-		if r.Method == "HEAD" {
-			calls++
-			if calls > 1 {
-				w.WriteHeader(http.StatusBadRequest)
-				return
-			}
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		if r.Method == "GET" && r.URL.Path == "/test/good_get1" {
-			fmt.Fprintln(w, "good get 1")
-			return
-		}
-		if r.Method == "GET" && r.URL.Path == "/test/good_get2" {
-			fmt.Fprintln(w, "good get 2")
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-	}))
+	ts2 := httptest.NewServer(http.HandlerFunc(handler))
 	defer ts2.Close()
 
 	nmap := map[string][]config.Node{
