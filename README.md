@@ -19,6 +19,10 @@ This will start rlb on port `:7070` by default and requests like `http://host/ap
 * GET|HEAD `/api/v1/jump/<service>?url=/blah/blah2.mp3` – returns 302 redirect to destination server
 * GET|HEAD `/<service>?url=/blah/blah2.mp3` – same as above
 
+## Failback support (optional)
+
+This allow to check the upstreams health for the requested resource and failback to a predefined servers if request fails. `failback` defined in the config file and in case if non-empty will add an additional `HEAD` request to the final URL. If request returns 200, the request will be passed to the upstream, if not - the result will be assembled from the `failback` + resource. I.e. if `failback` is `http://failback.com/` and resource is `/files/blah.mp3` then the final URL will be `http://failback.com/files/blah.mp3`.
+
 ## Config file format
 
 ```yaml
@@ -60,6 +64,8 @@ service2:
         ping: /rtfiles/rt_podcast480.mp3
         method: GET
         weight: 1
+
+failback: http://archives.radio-t.com/media
 ```
 
 ## Stats
