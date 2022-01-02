@@ -6,7 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"sync"
@@ -132,7 +132,7 @@ func (s *RLBServer) DoJump(w http.ResponseWriter, r *http.Request) {
 	svc := chi.URLParam(r, "svc")
 	url := r.URL.Query().Get("url")
 	log.Printf("[DEBUG] jump %s %s", svc, url)
-	redirurl, node, err := s.nodePicker.Pick(svc, url)
+	redirURL, node, err := s.nodePicker.Pick(svc, url)
 	if err != nil {
 		render.Status(r, http.StatusNotFound)
 		render.HTML(w, r, s.errMsg)
@@ -146,7 +146,7 @@ func (s *RLBServer) DoJump(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	http.Redirect(w, r, redirurl, http.StatusFound)
+	http.Redirect(w, r, redirURL, http.StatusFound)
 }
 
 func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) error {
@@ -182,7 +182,7 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 		}
 	}()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("[WARN] failed to read response body, %v", err)
 	}

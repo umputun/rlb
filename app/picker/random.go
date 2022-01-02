@@ -12,7 +12,7 @@ import (
 	"github.com/umputun/rlb/app/config"
 )
 
-// RandomWeighted implements picker.Interface for map of nodes
+// RandomWeighted implements picker with the random, weighted selection
 type RandomWeighted struct {
 	refresh time.Duration
 	timeout time.Duration
@@ -52,7 +52,7 @@ func (w *RandomWeighted) Pick(svc, resource string) (resURL string, node Node, e
 		return "", Node{}, errors.Errorf("no node for %s", svc)
 	}
 
-	node = alive[rand.Intn(len(alive))] //nolint
+	node = alive[rand.Intn(len(alive))] // nolint
 	return node.Server + resource, node, nil
 }
 

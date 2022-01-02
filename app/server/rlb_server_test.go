@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +13,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	"github.com/umputun/rlb/app/config"
 	"github.com/umputun/rlb/app/picker"
 )
@@ -42,7 +43,7 @@ func TestSubmitStats(t *testing.T) {
 	statsSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "/stat", r.URL.Path)
 		lrec := LogRecord{}
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		require.NoError(t, err)
 		err = json.Unmarshal(body, &lrec)
 		require.NoError(t, err)
@@ -67,7 +68,7 @@ func TestSubmitStats(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-	port := rand.Intn(10000) + 2000 //nolint
+	port := rand.Intn(10000) + 2000 // nolint
 	srv := NewRLBServer(newMockPicker(), "error msg", "", port, "v1")
 
 	go func() {
@@ -85,7 +86,7 @@ func TestRun(t *testing.T) {
 	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/ping", port))
 	require.NoError(t, err)
 	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	require.NoError(t, err)
 	assert.Equal(t, "pong", string(data))
 

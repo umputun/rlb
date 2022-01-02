@@ -5,7 +5,6 @@ package config
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 
 	log "github.com/go-pkgz/lgr"
 	yaml "gopkg.in/yaml.v2"
@@ -33,7 +32,7 @@ type Node struct {
 // NewConf makes new config for yml reader
 func NewConf(reader io.Reader) *ConfFile {
 	res := &ConfFile{}
-	data, err := ioutil.ReadAll(reader)
+	data, err := io.ReadAll(reader)
 	if err != nil {
 		log.Fatalf("[ERROR] failed to read config, %v", err)
 	}
