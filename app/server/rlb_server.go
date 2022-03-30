@@ -108,9 +108,9 @@ func (s *RLBServer) routes() chi.Router {
 	router := chi.NewRouter()
 
 	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()))
-	router.Use(middleware.Throttle(1000), middleware.Timeout(60*time.Second))
+	router.Use(middleware.Throttle(10000), middleware.Timeout(60*time.Second))
 	router.Use(rest.AppInfo("RLB", "Umputun", s.version), rest.Ping)
-	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(10, nil)), middleware.NoCache)
+	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)), middleware.NoCache)
 
 	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[INFO]")).Handler)
 
