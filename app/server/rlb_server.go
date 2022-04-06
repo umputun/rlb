@@ -112,8 +112,8 @@ func (s *RLBServer) routes() chi.Router {
 	router.Use(rest.AppInfo("RLB", "Umputun", s.version), rest.Ping)
 	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)), middleware.NoCache)
 
-	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[INFO]")).Handler)
-
+	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[INFO]"),
+		logger.IPfn(logger.AnonymizeIP)).Handler)
 	// current routes
 	router.Route("/api/v1/jump", func(r chi.Router) {
 		r.Get("/{svc}", s.DoJump)
