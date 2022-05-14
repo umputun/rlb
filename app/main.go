@@ -16,8 +16,8 @@ import (
 var opts struct {
 	Port     int           `short:"p" long:"port" env:"PORT" default:"7070" description:"port"`
 	Conf     string        `short:"c" long:"conf" env:"CONF" default:"rlb.yml" description:"configuration file"`
-	Refresh  time.Duration `short:"r" long:"refresh" env:"REFRESH" default:"30" description:"refresh interval"`
-	TimeOut  time.Duration `short:"t" long:"timeout" env:"TIMEOUT" default:"5" description:"HEAD/GET timeouts"`
+	Refresh  time.Duration `short:"r" long:"refresh" env:"REFRESH" default:"30s" description:"refresh interval"`
+	TimeOut  time.Duration `short:"t" long:"timeout" env:"TIMEOUT" default:"5s" description:"HEAD/GET timeouts"`
 	StatsURL string        `short:"s" long:"stats" env:"STATS" default:"" description:"stats url"`
 	Dbg      bool          `long:"dbg" env:"DEBUG" description:"debug mode"`
 }

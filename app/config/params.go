@@ -7,7 +7,7 @@ import (
 	"io"
 
 	log "github.com/go-pkgz/lgr"
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 // NodesMap wraps map with svc name as a key and all svc nodes as value
