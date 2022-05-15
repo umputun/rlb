@@ -207,5 +207,4 @@ func (s *RLBServer) statusCtrl(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, map[string]interface{}{"status": "ok"})
-	return
 }

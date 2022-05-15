@@ -154,6 +154,6 @@ func (m *mockPicker) Nodes() map[string][]picker.Node {
 	return m.nodes
 }
 
-func (m *mockPicker) Status() (bool, []string) {
+func (m *mockPicker) Status() (ok bool, failed []string) {
 	return true, []string{}
 }
