@@ -153,3 +153,7 @@ func (m *mockPicker) Pick(svc, resource string) (resURL string, node picker.Node
 func (m *mockPicker) Nodes() map[string][]picker.Node {
 	return m.nodes
 }
+
+func (m *mockPicker) Status() (bool, []string) {
+	return true, []string{}
+}

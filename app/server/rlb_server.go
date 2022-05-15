@@ -42,6 +42,7 @@ type RLBServer struct {
 type Picker interface {
 	Pick(svc string, resource string) (resURL string, node picker.Node, err error)
 	Nodes() map[string][]picker.Node
+	Status() (bool, []string)
 }
 
 // LogRecord for stats
@@ -120,6 +121,7 @@ func (s *RLBServer) routes() chi.Router {
 		r.Head("/{svc}", s.DoJump)
 	})
 
+	router.Get("/api/v1/status", s.statusCtrl)
 	// legacy routes
 	router.Get("/{svc}", s.DoJump)
 	router.Head("/{svc}", s.DoJump)
@@ -192,4 +194,18 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 	}
 
 	return nil
+}
+
+// GET /api/v1/status - returns status of all nodes, 200, 417 failed
+func (s *RLBServer) statusCtrl(w http.ResponseWriter, r *http.Request) {
+	ok, failed := s.nodePicker.Status()
+	if !ok {
+		render.Status(r, http.StatusExpectationFailed)
+		render.JSON(w, r, map[string]interface{}{"status": "failed", "hosts": failed})
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, map[string]interface{}{"status": "ok"})
+	return
 }

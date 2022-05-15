@@ -71,6 +71,22 @@ func (w *RandomWeighted) Nodes() map[string][]Node {
 	return w.nodes
 }
 
+// Status return status of all nodes, true if all nodes are alive, false if at least one is dead and return list of dead nodes
+func (w *RandomWeighted) Status() (bool, []string) {
+	w.lock.RLock()
+	defer w.lock.RUnlock()
+
+	var bad []string
+	for _, nodes := range w.nodes {
+		for _, node := range nodes {
+			if !node.alive {
+				bad = append(bad, node.Server)
+			}
+		}
+	}
+	return len(bad) == 0, bad
+}
+
 // updateAlive runs periodic pings to all nodes, updates nodes
 func (w *RandomWeighted) updateAlive() {
 	log.Printf("[DEBUG] alive updater started. refresh=%v, socket timeout=%v", w.refresh, w.timeout)
