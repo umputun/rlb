@@ -33,7 +33,7 @@ type RLBServer struct {
 	errMsg     string
 	version    string
 	port       int
-
+	bench      *rest.Benchmarks
 	httpServer *http.Server
 	lock       sync.Mutex
 }
@@ -106,15 +106,18 @@ func (s *RLBServer) Shutdown() {
 }
 
 func (s *RLBServer) routes() chi.Router {
-	router := chi.NewRouter()
 
-	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()))
+	router := chi.NewRouter()
+	s.bench = rest.NewBenchmarks()
+
+	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()), s.bench.Handler)
 	router.Use(middleware.Throttle(10000), middleware.Timeout(60*time.Second))
 	router.Use(rest.AppInfo("RLB", "Umputun", s.version), rest.Ping)
 	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)), middleware.NoCache)
 
-	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[INFO]"),
+	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[DEBUG]"),
 		logger.IPfn(logger.AnonymizeIP)).Handler)
+	router.Use()
 	// current routes
 	router.Route("/api/v1/jump", func(r chi.Router) {
 		r.Get("/{svc}", s.DoJump)
@@ -122,6 +125,7 @@ func (s *RLBServer) routes() chi.Router {
 	})
 
 	router.Get("/api/v1/status", s.statusCtrl)
+	router.Get("/api/v1/bench", s.benchCtrl)
 	// legacy routes
 	router.Get("/{svc}", s.DoJump)
 	router.Head("/{svc}", s.DoJump)
@@ -201,10 +205,25 @@ func (s *RLBServer) statusCtrl(w http.ResponseWriter, r *http.Request) {
 	ok, failed := s.nodePicker.Status()
 	if !ok {
 		render.Status(r, http.StatusExpectationFailed)
-		render.JSON(w, r, map[string]interface{}{"status": "failed", "hosts": failed})
+		render.JSON(w, r, rest.JSON{"status": "failed", "hosts": failed})
 		return
 	}
 
 	render.Status(r, http.StatusOK)
-	render.JSON(w, r, map[string]interface{}{"status": "ok"})
+	render.JSON(w, r, rest.JSON{"status": "ok"})
+}
+
+// GET /api/v1/bench - returns benchmarks json for 1, 5 and 15 minutes ranges
+func (s *RLBServer) benchCtrl(w http.ResponseWriter, r *http.Request) {
+	resp := struct {
+		OneMin     rest.BenchmarkStats `json:"1min"`
+		FiveMin    rest.BenchmarkStats `json:"5min"`
+		FifteenMin rest.BenchmarkStats `json:"15min"`
+	}{
+		s.bench.Stats(time.Minute),
+		s.bench.Stats(time.Minute * 5),
+		s.bench.Stats(time.Minute * 15),
+	}
+
+	render.JSON(w, r, resp)
 }
