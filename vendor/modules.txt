@@ -17,13 +17,13 @@ github.com/go-chi/chi/v5/middleware
 # github.com/go-chi/render v1.0.1
 ## explicit
 github.com/go-chi/render
-# github.com/go-pkgz/expirable-cache v0.0.3
+# github.com/go-pkgz/expirable-cache v0.1.0
 ## explicit; go 1.14
 github.com/go-pkgz/expirable-cache
 # github.com/go-pkgz/lgr v0.10.4
 ## explicit; go 1.15
 github.com/go-pkgz/lgr
-# github.com/go-pkgz/rest v1.15.0
+# github.com/go-pkgz/rest v1.15.1
 ## explicit; go 1.16
 github.com/go-pkgz/rest
 github.com/go-pkgz/rest/logger
@@ -43,11 +43,11 @@ github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 ## explicit
 github.com/pmezard/go-difflib/difflib
-# github.com/stretchr/testify v1.7.0
+# github.com/stretchr/testify v1.7.1
 ## explicit; go 1.13
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a
+# golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a
 ## explicit; go 1.17
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
