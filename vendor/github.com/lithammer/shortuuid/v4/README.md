@@ -1,7 +1,7 @@
 # shortuuid
 
-[![Build Status](https://img.shields.io/travis/renstrom/shortuuid.svg?style=flat-square)](https://travis-ci.org/renstrom/shortuuid)
-[![Godoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/renstrom/shortuuid)
+[![Build Status](https://github.com/lithammer/shortuuid/workflows/CI/badge.svg)](https://github.com/lithammer/shortuuid/actions)
+[![Godoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/lithammer/shortuuid)
 
 A Go library that generates concise, unambiguous, URL-safe UUIDs. Based on and
 compatible with the Python library
@@ -20,13 +20,13 @@ similar-looking characters such as l, 1, I, O and 0.
 package main
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/renstrom/shortuuid"
+	"github.com/lithammer/shortuuid/v4"
 )
 
 func main() {
-    u := shortuuid.New() // Cekw67uyMpBGZLRP2HFVbe
+	u := shortuuid.New() // KwSysDpxcBU9FNhGkn2dCf
 }
 ```
 
@@ -42,7 +42,7 @@ characters long.
 
 ```go
 alphabet := "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxy="
-shortuuid.NewWithAlphabet(alphabet) // u=BFWRLr5dXbeWf==iasZi
+shortuuid.NewWithAlphabet(alphabet) // iZsai==fWebXd5rLRWFB=u
 ```
 
 Bring your own encoder! For example, base58 is popular among bitcoin.
@@ -51,25 +51,26 @@ Bring your own encoder! For example, base58 is popular among bitcoin.
 package main
 
 import (
-    "fmt"
-    "github.com/btcsuite/btcutil/base58"
-    "github.com/renstrom/shortuuid"
-    "github.com/satori/go.uuid"
+	"fmt"
+
+	"github.com/btcsuite/btcutil/base58"
+	"github.com/google/uuid"
+	"github.com/lithammer/shortuuid/v4"
 )
 
-type base58Encoder struct {}
+type base58Encoder struct{}
 
 func (enc base58Encoder) Encode(u uuid.UUID) string {
-    return base58.Encode(u.Bytes())
+	return base58.Encode(u[:])
 }
 
 func (enc base58Encoder) Decode(s string) (uuid.UUID, error) {
-    return uuid.FromBytes(base58.Decode(s))
+	return uuid.FromBytes(base58.Decode(s))
 }
 
 func main() {
-    enc := base58Encoder{}
-    fmt.Println(shortuuid.NewWithEncoder(enc)) // 6R7VqaQHbzC1xwA5UueGe6
+	enc := base58Encoder{}
+	fmt.Println(shortuuid.NewWithEncoder(enc)) // 6R7VqaQHbzC1xwA5UueGe6
 }
 ```
 

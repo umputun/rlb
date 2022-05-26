@@ -10,7 +10,7 @@ require (
 	github.com/go-pkgz/lgr v0.10.4
 	github.com/go-pkgz/rest v1.15.2
 	github.com/jessevdk/go-flags v1.5.0
-	github.com/lithammer/shortuuid v3.0.0+incompatible
+	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.1
 	gopkg.in/yaml.v2 v2.4.0

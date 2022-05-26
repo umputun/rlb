@@ -34,9 +34,9 @@ github.com/google/uuid
 # github.com/jessevdk/go-flags v1.5.0
 ## explicit; go 1.15
 github.com/jessevdk/go-flags
-# github.com/lithammer/shortuuid v3.0.0+incompatible
-## explicit
-github.com/lithammer/shortuuid
+# github.com/lithammer/shortuuid/v4 v4.0.0
+## explicit; go 1.13
+github.com/lithammer/shortuuid/v4
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
