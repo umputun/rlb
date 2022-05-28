@@ -15,10 +15,8 @@ github.com/go-pkgz/expirable-cache v0.1.0 h1:3bw0m8vlTK8qlwz5KXuygNBTkiKRTPrAGXU
 github.com/go-pkgz/expirable-cache v0.1.0/go.mod h1:GTrEl0X+q0mPNqN6dtcQXksACnzCBQ5k/k1SwXJsZKs=
 github.com/go-pkgz/lgr v0.10.4 h1:l7qyFjqEZgwRgaQQSEp6tve4A3OU80VrfzpvtEX8ngw=
 github.com/go-pkgz/lgr v0.10.4/go.mod h1:CD0s1z6EFpIUplV067gitF77tn25JItzwHNKAPqeCF0=
-github.com/go-pkgz/rest v1.15.2 h1:e+yaHlD6la+UKbsdI1Eh9DD/ZGykv/FxaeH8JBEanHk=
-github.com/go-pkgz/rest v1.15.2/go.mod h1:KUWAqbDteYGS/CiXftomQsKjtEOifXsJ36Ka0skYbmk=
-github.com/go-pkgz/rest v1.15.3 h1:j+Cl5KL0ped09wpp8blqK9wpxR/xjbRzOBLunc1K8sw=
-github.com/go-pkgz/rest v1.15.3/go.mod h1:KUWAqbDteYGS/CiXftomQsKjtEOifXsJ36Ka0skYbmk=
+github.com/go-pkgz/rest v1.15.4 h1:Ailf2TpIpavDvKHp3JJVqSKrR/NwZ9HxoQMemOT97Vc=
+github.com/go-pkgz/rest v1.15.4/go.mod h1:KUWAqbDteYGS/CiXftomQsKjtEOifXsJ36Ka0skYbmk=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/jessevdk/go-flags v1.5.0 h1:1jKYvbxEjfUl0fmqTCOfonvskHHXMjBySTLW4y9LFvc=
