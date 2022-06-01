@@ -110,7 +110,7 @@ func (s *RLBServer) routes() chi.Router {
 	router := chi.NewRouter()
 	s.bench = rest.NewBenchmarks()
 
-	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()), s.bench.Handler)
+	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()))
 	router.Use(middleware.Throttle(10000), middleware.Timeout(60*time.Second))
 	router.Use(rest.AppInfo("RLB", "Umputun", s.version), rest.Ping)
 	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)), middleware.NoCache)
@@ -118,17 +118,23 @@ func (s *RLBServer) routes() chi.Router {
 	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[DEBUG]"),
 		logger.IPfn(logger.AnonymizeIP)).Handler)
 	router.Use()
+
 	// current routes
 	router.Route("/api/v1/jump", func(r chi.Router) {
+		r.Use(s.bench.Handler)
+		r.Get("/{svc}", s.DoJump)
+		r.Head("/{svc}", s.DoJump)
+	})
+
+	// legacy routes
+	router.Group(func(r chi.Router) {
+		r.Use(s.bench.Handler)
 		r.Get("/{svc}", s.DoJump)
 		r.Head("/{svc}", s.DoJump)
 	})
 
 	router.Get("/api/v1/status", s.statusCtrl)
 	router.Get("/api/v1/bench", s.benchCtrl)
-	// legacy routes
-	router.Get("/{svc}", s.DoJump)
-	router.Head("/{svc}", s.DoJump)
 
 	return router
 }
