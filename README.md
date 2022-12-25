@@ -6,6 +6,8 @@ Servers picked up randomly, unhealthy boxes excluded dynamically.
 
 _Note: This is not a replacement for reverse proxy. All it does is HTTP redirect, not the real network proxying._
 
+To visualise the redirected content popularity statistics, you can use [rlb-stats](https://github.com/umputun/rlb-stats).
+
 ## Install
 
 1. Copy provided `docker-compose.yml`
