@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/didip/tollbooth/v6"
+	"github.com/didip/tollbooth/v7"
 	"github.com/didip/tollbooth_chi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -21,8 +21,6 @@ import (
 	"github.com/go-pkgz/rest"
 	"github.com/go-pkgz/rest/logger"
 	"github.com/lithammer/shortuuid/v4"
-	"github.com/pkg/errors"
-
 	"github.com/umputun/rlb/app/picker"
 )
 
@@ -64,6 +62,7 @@ func NewRLBServer(nodePicker Picker, emsg, statsURL string, port int, version st
 		statsURL:   statsURL,
 		version:    version,
 		port:       port,
+		bench:      rest.NewBenchmarks(),
 	}
 	for k, v := range nodePicker.Nodes() {
 		log.Printf("[INFO] service=%s, nodes=%v", k, v)
@@ -108,7 +107,6 @@ func (s *RLBServer) Shutdown() {
 func (s *RLBServer) routes() chi.Router {
 
 	router := chi.NewRouter()
-	s.bench = rest.NewBenchmarks()
 
 	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()))
 	router.Use(middleware.Throttle(10000), middleware.Timeout(60*time.Second))
@@ -180,12 +178,12 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 
 	data, err := json.Marshal(&lrec)
 	if err != nil {
-		return errors.Wrap(err, "can't marshal")
+		return fmt.Errorf("can't marshal: %w", err)
 	}
 
 	resp, err := client.Post(s.statsURL, "application/json", bytes.NewReader(data))
 	if err != nil {
-		return errors.Wrapf(err, "remote call failed")
+		return fmt.Errorf("remote call failed: %w", err)
 	}
 
 	defer func() {
@@ -200,7 +198,7 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return errors.Errorf("bad status code %d, body %s", resp.StatusCode, string(body))
+		return fmt.Errorf("bad status code %d, body %s", resp.StatusCode, string(body))
 	}
 
 	return nil

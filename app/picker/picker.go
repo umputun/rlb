@@ -2,12 +2,11 @@
 package picker
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	log "github.com/go-pkgz/lgr"
-	"github.com/pkg/errors"
-
 	"github.com/umputun/rlb/app/config"
 )
 
@@ -43,11 +42,11 @@ func checkURL(url, method string, timeout time.Duration) error {
 	case "GET":
 		resp, err = client.Get(url)
 	default:
-		return errors.Errorf("refused to hit %s, unknown method %s", url, method)
+		return fmt.Errorf("refused to hit %s, unknown method %s", url, method)
 	}
 
 	if err != nil {
-		return errors.Wrapf(err, "failed to hit %s, method %s", url, method)
+		return fmt.Errorf("failed to hit %s, method %s: %w", url, method, err)
 	}
 
 	defer func() {
@@ -57,7 +56,7 @@ func checkURL(url, method string, timeout time.Duration) error {
 	}()
 
 	if resp.StatusCode >= 400 {
-		return errors.Errorf("bad status code %d for %s", resp.StatusCode, url)
+		return fmt.Errorf("bad status code %d for %s", resp.StatusCode, url)
 	}
 
 	return nil

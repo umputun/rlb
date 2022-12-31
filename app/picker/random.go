@@ -7,8 +7,6 @@ import (
 	"time"
 
 	log "github.com/go-pkgz/lgr"
-	"github.com/pkg/errors"
-
 	"github.com/umputun/rlb/app/config"
 )
 
@@ -49,7 +47,7 @@ func (w *RandomWeighted) Pick(svc, resource string) (resURL string, node Node, e
 	}
 
 	if len(alive) == 0 {
-		return "", Node{}, errors.Errorf("no node for %s", svc)
+		return "", Node{}, fmt.Errorf("no node for %s", svc)
 	}
 
 	node = alive[rand.Intn(len(alive))] // nolint
