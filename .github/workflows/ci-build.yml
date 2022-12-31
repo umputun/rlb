@@ -1,0 +1,70 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+  pull_request:
+
+jobs:
+  build-images:
+    name: Build Docker images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+
+      - name: build docker image without pushing (only outside master)
+        if: ${{ github.ref != 'refs/heads/master' }}
+        run: |
+          docker buildx build \
+              --platform linux/amd64 .
+
+      - name: build docker image for ghcr.io and DockerHub
+        if: ${{ github.ref == 'refs/heads/master' }}
+        env:
+          GITHUB_PACKAGE_TOKEN: ${{ secrets.PKG_TOKEN }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+          DOCKER_HUB_USER: umputun
+          USERNAME: ${{ github.actor }}
+          GITHUB_SHA: ${{ github.sha}}
+          GITHUB_REF: ${{ github.ref}}
+        run: |
+          echo ${GITHUB_PACKAGE_TOKEN} | docker login ghcr.io -u ${USERNAME} --password-stdin
+          echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin
+          docker buildx build --push \
+              --build-arg CI=github --build-arg GITHUB_SHA=${GITHUB_SHA} --build-arg GIT_BRANCH=${ref} \
+              --platform linux/amd64,linux/arm/v7,linux/arm64 \
+              -t ghcr.io/${USERNAME}/rlb:${ref} -t ${DOCKER_HUB_USER}/rlb:${ref} .
+
+      - name: deploy tagged (latest) to ghcr.io and dockerhub
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        env:
+          GITHUB_PACKAGE_TOKEN: ${{ secrets.PKG_TOKEN }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+          DOCKER_HUB_USER: umputun
+          USERNAME: ${{ github.actor }}
+          GITHUB_SHA: ${{ github.sha}}
+          GITHUB_REF: ${{ github.ref}}
+        run: |
+          ref="$(echo ${GITHUB_REF} | cut -d'/' -f3)"
+          echo GITHUB_REF - $ref
+          echo ${GITHUB_PACKAGE_TOKEN} | docker login ghcr.io -u ${USERNAME} --password-stdin
+          echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin
+          docker buildx build --push \
+              --build-arg CI=github --build-arg GITHUB_SHA=${GITHUB_SHA} --build-arg GIT_BRANCH=${ref} \
+              --platform linux/amd64,linux/arm/v7,linux/arm64 \
+              -t ghcr.io/${USERNAME}/rlb:${ref} -t ghcr.io/${USERNAME}/rlb:latest \
+              -t ${DOCKER_HUB_USER}/rlb:${ref} -t ${DOCKER_HUB_USER}/rlb:latest .

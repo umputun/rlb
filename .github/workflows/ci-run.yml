@@ -1,0 +1,43 @@
+name: run
+
+on:
+  push:
+    branches:
+    tags:
+  pull_request:
+
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: set up go 1.17
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.17
+
+    - name: build and test
+      run: go test -race -timeout=60s -covermode=atomic -coverprofile=$GITHUB_WORKSPACE/profile.cov ./...
+
+    - name: install golangci-lint and goveralls
+      run: |
+        curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $GITHUB_WORKSPACE v1.50.1
+        go install github.com/mattn/goveralls@latest
+
+    - name: run linters
+      run: $GITHUB_WORKSPACE/golangci-lint run ./...
+
+    - name: submit coverage
+      run: |
+        export GIT_BRANCH="${GITHUB_REF/refs\/heads\//}"
+        export GIT_TAG="${GITHUB_REF/refs\/tags\//}"
+        if [[ "$GIT_TAG" != "$GITHUB_REF" ]]; then
+          export GIT_BRANCH=$GIT_TAG
+        fi
+        echo "coverage for branch $GIT_BRANCH"
+        goveralls -service="GitHub Action" -coverprofile=$GITHUB_WORKSPACE/profile.cov
+      env:
+        COVERALLS_TOKEN: ${{secrets.COVERALLS_TOKEN}}

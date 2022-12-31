@@ -10,7 +10,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -110,7 +109,7 @@ func hit(r hitReq) (location string, err error) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 302 {
-		return "", errors.Errorf("wrong status code %d", resp.StatusCode)
+		return "", fmt.Errorf("wrong status code %d", resp.StatusCode)
 	}
 	return resp.Header.Get("Location"), nil
 }
@@ -140,7 +139,7 @@ func newMockPicker() *mockPicker {
 func (m *mockPicker) Pick(svc, resource string) (resURL string, node picker.Node, err error) {
 	svcNodes, ok := m.nodes[svc]
 	if !ok {
-		return "", node, errors.Errorf("no such service %s", svc)
+		return "", node, fmt.Errorf("no such service %s", svc)
 	}
 	id := m.ids[svc]
 	m.ids[svc] = id + 1
