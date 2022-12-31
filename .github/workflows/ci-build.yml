@@ -42,6 +42,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha}}
           GITHUB_REF: ${{ github.ref}}
         run: |
+          ref="$(echo ${GITHUB_REF} | cut -d'/' -f3)"
           echo ${GITHUB_PACKAGE_TOKEN} | docker login ghcr.io -u ${USERNAME} --password-stdin
           echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin
           docker buildx build --push \
