@@ -84,7 +84,7 @@ func TestRun(t *testing.T) {
 
 	resp, err := http.Get(fmt.Sprintf("http://localhost:%d/ping", port))
 	require.NoError(t, err)
-	defer resp.Body.Close()
+	defer resp.Body.Close() // nolint
 	data, err := io.ReadAll(resp.Body)
 	require.NoError(t, err)
 	assert.Equal(t, "pong", string(data))
@@ -107,7 +107,7 @@ func hit(r hitReq) (location string, err error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() // nolint
 	if resp.StatusCode != 302 {
 		return "", fmt.Errorf("wrong status code %d", resp.StatusCode)
 	}

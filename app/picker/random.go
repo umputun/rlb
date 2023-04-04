@@ -7,6 +7,7 @@ import (
 	"time"
 
 	log "github.com/go-pkgz/lgr"
+
 	"github.com/umputun/rlb/app/config"
 )
 
@@ -21,7 +22,6 @@ type RandomWeighted struct {
 
 // NewRandomWeighted makes new picker. Activate alive update thread
 func NewRandomWeighted(nodes config.NodesMap, refresh, timeout time.Duration, failBackURL string) *RandomWeighted {
-	rand.Seed(int64(time.Now().Nanosecond()))
 	res := RandomWeighted{nodes: nodesFromConf(nodes), refresh: refresh, timeout: timeout, failBackURL: failBackURL}
 	go res.updateAlive()
 	log.Printf("[DEBUG] nodes %+v", nodes)
