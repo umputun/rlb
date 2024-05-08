@@ -4,7 +4,6 @@ ARG GIT_BRANCH
 ARG GITHUB_SHA
 ARG CI
 
-ENV GOFLAGS="-mod=vendor"
 ENV CGO_ENABLED=0
 
 ADD . /build
@@ -19,6 +18,8 @@ RUN \
 
 
 FROM umputun/baseimage:app-latest
+# enables automatic changelog generation by tools like Dependabot
+LABEL org.opencontainers.image.source="https://github.com/umputun/rlb"
 COPY --from=build /build/rlb /srv/rlb
 EXPOSE 7070
 WORKDIR /srv
