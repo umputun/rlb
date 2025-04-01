@@ -23,7 +23,7 @@ jobs:
       run: go test -race -timeout=60s -covermode=atomic -coverprofile=$GITHUB_WORKSPACE/profile.cov ./...
 
     - name: golangci-lint
-      uses: golangci/golangci-lint-action@v6
+      uses: golangci/golangci-lint-action@v7
       with:
         version: v1.58
 
