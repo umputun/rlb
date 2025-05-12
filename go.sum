@@ -15,13 +15,14 @@ github.com/go-chi/render v1.0.3/go.mod h1:/gr3hVkmYR0YlEy3LxCuVRFzEu9Ruok+gFqbIo
 github.com/go-pkgz/expirable-cache v0.1.0/go.mod h1:GTrEl0X+q0mPNqN6dtcQXksACnzCBQ5k/k1SwXJsZKs=
 github.com/go-pkgz/expirable-cache/v3 v3.0.0 h1:u3/gcu3sabLYiTCevoRKv+WzjIn5oo7P8XtiXBeRDLw=
 github.com/go-pkgz/expirable-cache/v3 v3.0.0/go.mod h1:2OQiDyEGQalYecLWmXprm3maPXeVb5/6/X7yRPYTzec=
-github.com/go-pkgz/lgr v0.11.1 h1:hXFhZcznehI6imLhEa379oMOKFz7TQUmisAqb3oLOSM=
-github.com/go-pkgz/lgr v0.11.1/go.mod h1:tgDF4RXQnBfIgJqjgkv0yOeTQ3F1yewWIZkpUhHnAkU=
+github.com/go-pkgz/lgr v0.12.0 h1:uoSCLdiMocZDa+L66DavHG5UIkOJvWKOVqt6sNQllw0=
+github.com/go-pkgz/lgr v0.12.0/go.mod h1:A4AxjOthFVFK6jRnVYMeusno5SeDAxcLVHd0kI/lN/Y=
 github.com/go-pkgz/rest v1.20.2 h1:6wYWo85H7xFU09FadVKKc5LKIfIpCStBXJj9F/P4COc=
 github.com/go-pkgz/rest v1.20.2/go.mod h1:NC2xNN/y1rIs0PY13FowKoH8rk9RhJNJ0tTbkBg8Yks=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/hashicorp/golang-lru/v2 v2.0.7 h1:a+bsQ5rvGLjzHuww6tVxozPZFVghXaHOwFs4luLUK2k=
+github.com/hashicorp/golang-lru/v2 v2.0.7/go.mod h1:QeFd9opnmA6QUJc5vARoKUSoFhyfM2/ZepoAG6RGpeM=
 github.com/jessevdk/go-flags v1.6.1 h1:Cvu5U8UGrLay1rZfv/zP7iLpSHGUZ/Ou68T0iX1bBK4=
 github.com/jessevdk/go-flags v1.6.1/go.mod h1:Mk8T1hIAWpOiJiHa9rJASDK2UGWji0EuPGBnNLMooyc=
 github.com/lithammer/shortuuid/v4 v4.0.0 h1:QRbbVkfgNippHOS8PXDkti4NaWeyYfcBTHtw7k08o4c=
