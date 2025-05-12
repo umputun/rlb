@@ -1,6 +1,6 @@
 module github.com/umputun/rlb
 
-go 1.20
+go 1.21
 
 require (
 	github.com/didip/tollbooth/v7 v7.0.2
@@ -10,7 +10,7 @@ require (
 	github.com/go-pkgz/lgr v0.11.1
 	github.com/go-pkgz/rest v1.20.2
 	github.com/jessevdk/go-flags v1.6.1
-	github.com/lithammer/shortuuid/v4 v4.0.0
+	github.com/lithammer/shortuuid/v4 v4.2.0
 	github.com/stretchr/testify v1.10.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -19,7 +19,7 @@ require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-pkgz/expirable-cache/v3 v3.0.0 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
