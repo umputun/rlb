@@ -1,6 +1,6 @@
 module github.com/umputun/rlb
 
-go 1.20
+go 1.21
 
 require (
 	github.com/didip/tollbooth/v7 v7.0.2
@@ -11,7 +11,7 @@ require (
 	github.com/go-pkgz/rest v1.20.2
 	github.com/jessevdk/go-flags v1.6.1
 	github.com/lithammer/shortuuid/v4 v4.0.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	gopkg.in/yaml.v3 v3.0.1
 )
 
