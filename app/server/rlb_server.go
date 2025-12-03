@@ -12,14 +12,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/didip/tollbooth/v7"
-	"github.com/didip/tollbooth_chi"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/render"
 	log "github.com/go-pkgz/lgr"
 	"github.com/go-pkgz/rest"
 	"github.com/go-pkgz/rest/logger"
+	"github.com/go-pkgz/routegroup"
 	"github.com/lithammer/shortuuid/v4"
 	"github.com/umputun/rlb/app/picker"
 )
@@ -104,48 +100,47 @@ func (s *RLBServer) Shutdown() {
 	s.lock.Unlock()
 }
 
-func (s *RLBServer) routes() chi.Router {
+func (s *RLBServer) routes() http.Handler {
+	router := routegroup.New(http.NewServeMux())
 
-	router := chi.NewRouter()
-
-	router.Use(middleware.RequestID, middleware.RealIP, rest.Recoverer(log.Default()))
-	router.Use(middleware.Throttle(10000), middleware.Timeout(60*time.Second))
+	router.Use(rest.Recoverer(log.Default()))
+	router.Use(rest.Throttle(10000))
 	router.Use(rest.AppInfo("RLB", "Umputun", s.version), rest.Ping)
-	router.Use(tollbooth_chi.LimitHandler(tollbooth.NewLimiter(50, nil)), middleware.NoCache)
+	router.Use(rest.NoCache)
 
 	router.Use(logger.New(logger.Log(log.Default()), logger.WithBody, logger.Prefix("[DEBUG]"),
 		logger.IPfn(logger.AnonymizeIP)).Handler)
-	router.Use()
 
 	// current routes
-	router.Route("/api/v1/jump", func(r chi.Router) {
+	router.Mount("/api/v1/jump").Route(func(r *routegroup.Bundle) {
 		r.Use(s.bench.Handler)
-		r.Get("/{svc}", s.DoJump)
-		r.Head("/{svc}", s.DoJump)
+		r.HandleFunc("GET /{svc}", s.DoJump)
+		r.HandleFunc("HEAD /{svc}", s.DoJump)
 	})
 
 	// legacy routes
-	router.Group(func(r chi.Router) {
+	router.Group().Route(func(r *routegroup.Bundle) {
 		r.Use(s.bench.Handler)
-		r.Get("/{svc}", s.DoJump)
-		r.Head("/{svc}", s.DoJump)
+		r.HandleFunc("GET /{svc}", s.DoJump)
+		r.HandleFunc("HEAD /{svc}", s.DoJump)
 	})
 
-	router.Get("/api/v1/status", s.statusCtrl)
-	router.Get("/api/v1/bench", s.benchCtrl)
+	router.HandleFunc("GET /api/v1/status", s.statusCtrl)
+	router.HandleFunc("GET /api/v1/bench", s.benchCtrl)
 
 	return router
 }
 
 // DoJump - jump to alive server for svc, url = Query("url")
 func (s *RLBServer) DoJump(w http.ResponseWriter, r *http.Request) {
-	svc := chi.URLParam(r, "svc")
+	svc := r.PathValue("svc")
 	url := r.URL.Query().Get("url")
 	log.Printf("[DEBUG] jump %s %s", svc, url)
 	redirURL, node, err := s.nodePicker.Pick(svc, url)
 	if err != nil {
-		render.Status(r, http.StatusNotFound)
-		render.HTML(w, r, s.errMsg)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte(s.errMsg))
 		return
 	}
 
@@ -205,20 +200,18 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 }
 
 // GET /api/v1/status - returns status of all nodes, 200, 417 failed
-func (s *RLBServer) statusCtrl(w http.ResponseWriter, r *http.Request) {
+func (s *RLBServer) statusCtrl(w http.ResponseWriter, _ *http.Request) {
 	ok, failed := s.nodePicker.Status()
 	if !ok {
-		render.Status(r, http.StatusExpectationFailed)
-		render.JSON(w, r, rest.JSON{"status": "failed", "hosts": failed})
+		w.WriteHeader(http.StatusExpectationFailed)
+		rest.RenderJSON(w, rest.JSON{"status": "failed", "hosts": failed})
 		return
 	}
-
-	render.Status(r, http.StatusOK)
-	render.JSON(w, r, rest.JSON{"status": "ok"})
+	rest.RenderJSON(w, rest.JSON{"status": "ok"})
 }
 
 // GET /api/v1/bench - returns benchmarks json for 1, 5 and 15 minutes ranges
-func (s *RLBServer) benchCtrl(w http.ResponseWriter, r *http.Request) {
+func (s *RLBServer) benchCtrl(w http.ResponseWriter, _ *http.Request) {
 	resp := struct {
 		OneMin     rest.BenchmarkStats `json:"1min"`
 		FiveMin    rest.BenchmarkStats `json:"5min"`
@@ -229,5 +222,5 @@ func (s *RLBServer) benchCtrl(w http.ResponseWriter, r *http.Request) {
 		s.bench.Stats(time.Minute * 15),
 	}
 
-	render.JSON(w, r, resp)
+	rest.RenderJSON(w, resp)
 }

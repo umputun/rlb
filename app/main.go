@@ -1,3 +1,4 @@
+// Package main provides rlb load balancer service.
 package main
 
 import (

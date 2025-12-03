@@ -39,7 +39,7 @@ func TestDoJump(t *testing.T) {
 
 func TestSubmitStats(t *testing.T) {
 
-	statsSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	statsSrv := httptest.NewServer(http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "/stat", r.URL.Path)
 		lrec := LogRecord{}
 		body, err := io.ReadAll(r.Body)
@@ -99,7 +99,7 @@ type hitReq struct {
 
 func hit(r hitReq) (location string, err error) {
 	client := &http.Client{
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+		CheckRedirect: func(_ *http.Request, _ []*http.Request) error {
 			return http.ErrUseLastResponse
 		}}
 	url := fmt.Sprintf("%s/api/v1/jump/%s?url=%s", r.url, r.svc, r.resource)
