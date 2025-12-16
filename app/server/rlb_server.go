@@ -203,8 +203,7 @@ func (s *RLBServer) submitStats(r *http.Request, node picker.Node, url string) e
 func (s *RLBServer) statusCtrl(w http.ResponseWriter, _ *http.Request) {
 	ok, failed := s.nodePicker.Status()
 	if !ok {
-		w.WriteHeader(http.StatusExpectationFailed)
-		rest.RenderJSON(w, rest.JSON{"status": "failed", "hosts": failed})
+		_ = rest.EncodeJSON(w, http.StatusExpectationFailed, rest.JSON{"status": "failed", "hosts": failed})
 		return
 	}
 	rest.RenderJSON(w, rest.JSON{"status": "ok"})
