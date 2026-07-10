@@ -1,6 +1,6 @@
 module github.com/umputun/rlb
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/go-pkgz/lgr v0.12.1
@@ -16,6 +16,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/crypto v0.45.0 // indirect
-	golang.org/x/sys v0.38.0 // indirect
+	golang.org/x/crypto v0.52.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
 )
