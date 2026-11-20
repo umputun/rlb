@@ -47,7 +47,7 @@ jobs:
           echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin
           docker buildx build --push \
               --build-arg CI=github --build-arg GITHUB_SHA=${GITHUB_SHA} --build-arg GIT_BRANCH=${ref} \
-              --platform linux/amd64,linux/arm/v7,linux/arm64 \
+              --platform linux/amd64,linux/arm64 \
               -t ghcr.io/${USERNAME}/rlb:${ref} -t ${DOCKER_HUB_USER}/rlb:${ref} .
 
       - name: deploy tagged (latest) to ghcr.io and dockerhub
@@ -66,6 +66,6 @@ jobs:
           echo ${DOCKER_HUB_TOKEN} | docker login -u ${DOCKER_HUB_USER} --password-stdin
           docker buildx build --push \
               --build-arg CI=github --build-arg GITHUB_SHA=${GITHUB_SHA} --build-arg GIT_BRANCH=${ref} \
-              --platform linux/amd64,linux/arm/v7,linux/arm64 \
+              --platform linux/amd64,linux/arm64 \
               -t ghcr.io/${USERNAME}/rlb:${ref} -t ghcr.io/${USERNAME}/rlb:latest \
               -t ${DOCKER_HUB_USER}/rlb:${ref} -t ${DOCKER_HUB_USER}/rlb:latest .
